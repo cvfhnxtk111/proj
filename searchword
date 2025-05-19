@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ScanText Highlighter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f5ff;
+            padding: 30px;
+        }
+        h2 {
+            color: #333;
+        }
+        #fileDisplay {
+            margin-top: 30px;
+            padding: 15px;
+            border: 2px dashed #aaa;
+            background-color: #ffffff;
+            white-space: pre-wrap;
+            min-height: 150px;
+        }
+        .found {
+            background-color: lime;
+            color: black;
+            font-weight: bold;
+            border-radius: 3px;
+            padding: 1px 3px;
+        }
+        .inputBox {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>ScanText Highlighter</h2>
+
+<div class="inputBox">
+    <label>Choose a .txt file:</label>
+    <input type="file" id="textLoader" accept=".txt">
+</div>
+
+<div class="inputBox">
+    <label>Keyword or symbol(s):</label>
+    <input type="text" id="wordInput" placeholder="e.g. hello">
+    <button onclick="scanText()">Highlight</button>
+</div>
+
+<div id="fileDisplay">Your file content will appear here...</div>
+
+<script>
+let originalText = '';
+
+document.getElementById('textLoader').addEventListener('change', function(event) {
+    const chosenFile = event.target.files[0];
+    if (!chosenFile) return;
+
+    const loader = new FileReader();
+    loader.onload = function(e) {
+        originalText = e.target.result;
+        document.getElementById('fileDisplay').innerText = originalText;
+    };
+    loader.readAsText(chosenFile);
+});
+
+function scanText() {
+    const keyword = document.getElementById('wordInput').value;
+    if (!keyword) return;
+
+    const expression = new RegExp(`(${keyword})`, 'gi');
+    const highlightedText = originalText.replace(expression, '<span class="found">$1</span>');
+    document.getElementById('fileDisplay').innerHTML = highlightedText;
+}
+</script>
+
+</body>
+</html>
